@@ -1,4 +1,3 @@
-import hashlib
 import os
 from contextlib import asynccontextmanager
 from datetime import datetime, timezone
@@ -6,6 +5,7 @@ from datetime import datetime, timezone
 from ai import extract_page_attributes, generate_embedding
 from anyio import to_thread
 from database import search_bookmarks_in_db, store_bookmark_in_db
+from helpers import clean_html, generate_id_from_url, parse_timestamp
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from models import Bookmark, PageContent, SearchResultBookmark
@@ -36,18 +36,6 @@ async def lifespan(_: FastAPI):
     yield
 
 
-def generate_id_from_url(url: str) -> int:
-    """
-    Helper to generate a deterministic integer ID from a URL.
-
-    Args:
-        url (str): The URL string to generate the ID for.
-
-    Returns:
-        int: A deterministic integer representation of the URL generated using SHA-256.
-    """
-    return int(hashlib.sha256(url.encode("utf-8")).hexdigest()[:8], 16)
-
 
 @app.post("/process", response_model=Bookmark)
 async def process_page_content(payload: PageContent):
@@ -73,8 +61,7 @@ async def process_page_content(payload: PageContent):
         f"html_len={len(payload.html)} text_len={len(payload.text)}"
     )
     try:
-        ts_str = payload.timestamp.replace("Z", "+00:00")
-        created_at = datetime.fromisoformat(ts_str)
+        created_at = parse_timestamp(payload.timestamp)
     except ValueError as e:
         raise HTTPException(
             status_code=400, detail=f"Invalid timestamp format in payload: {e}"
@@ -84,9 +71,9 @@ async def process_page_content(payload: PageContent):
 
     print("[smart-bookmarks] Calling LLM to extract page attributes...")
     try:
-        content = payload.text or payload.html
+        safe_to_embed = clean_html(payload.html)[:8000]
         api_key = os.environ["GEMINI_API_KEY"]
-        attributes = await extract_page_attributes(api_key, content)
+        attributes = await extract_page_attributes(api_key, safe_to_embed)
         print(f"[smart-bookmarks] Parsed PageAttributes: {attributes!r}")
     except Exception as e:
         raise HTTPException(

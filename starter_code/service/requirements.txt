@@ -6,3 +6,4 @@ google-antigravity==0.1.1
 pg8000==1.31.5
 pydantic==2.13.4
 uvicorn==0.48.0
+beautifulsoup4==4.15.0
