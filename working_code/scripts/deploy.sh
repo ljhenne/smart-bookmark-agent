@@ -19,14 +19,14 @@ if [ -z "$DB_PASSWORD" ]; then
   exit 1
 fi
 
-echo "Deploying maggie-service to Google Cloud Run..."
+echo "Deploying bookmark-service to Google Cloud Run..."
 
-gcloud run deploy maggie-service \
+gcloud run deploy bookmark-service \
   --source "$(dirname "$0")" \
   --region us-west1 \
   --platform managed \
   --allow-unauthenticated \
-  --add-cloudsql-instances=ljhenne-joonix-sandbox:us-west1:maggie \
-  --set-env-vars="PROJECT_ID=ljhenne-joonix-sandbox,REGION=us-west1,INSTANCE_NAME=maggie,DB_USER=maggie-service,DB_PASSWORD=$DB_PASSWORD,DB_NAME=maggies-nest,GEMINI_API_KEY=$GEMINI_API_KEY"
+  --add-cloudsql-instances=ljhenne-joonix-sandbox:us-west1:bookmark-instance \
+  --set-env-vars="PROJECT_ID=ljhenne-joonix-sandbox,REGION=us-west1,INSTANCE_NAME=bookmark-instance,DB_USER=bookmark-user,DB_PASSWORD=$DB_PASSWORD,DB_NAME=bookmarks-db,GEMINI_API_KEY=$GEMINI_API_KEY"
 
 echo "Deployment complete!"

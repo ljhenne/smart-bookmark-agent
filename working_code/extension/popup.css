@@ -1,4 +1,4 @@
-/* Color System - Maggie's Memory App Design Language */
+/* Color System - Memory App Design Language */
 :root {
   --bg-dark: #020A1E;
   /* Deep Navy Black */
@@ -451,24 +451,24 @@ body {
   display: none !important;
 }
 
-/* Maggie the Magpie Animations & Styles */
+/* Success Animations & Styles */
 
 
-.maggie-success-nest {
+.success-container {
   display: flex;
   flex-direction: column;
   align-items: center;
   margin-top: 18px;
 }
 
-.maggie-success-img {
+.success-image {
   width: 54px;
   height: 54px;
   object-fit: contain;
   filter: drop-shadow(0 4px 8px rgba(0,0,0,0.2));
 }
 
-.maggie-bubble {
+.success-message {
   background: rgba(163, 210, 166, 0.1);
   border: 1px solid var(--color-seafoam);
   color: var(--color-seafoam);

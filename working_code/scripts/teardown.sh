@@ -3,9 +3,9 @@
 # Exit on any error
 set -e
 
-echo "Deleting maggie-service from Google Cloud Run..."
+echo "Deleting bookmark-service from Google Cloud Run..."
 
-gcloud run services delete maggie-service \
+gcloud run services delete bookmark-service \
   --region us-west1 \
   --quiet
 

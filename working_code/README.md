@@ -16,7 +16,7 @@ To deploy this project to Google Cloud, you will need the following resources en
 1. **Cloud SQL for PostgreSQL**
    - Must have the `pgvector` extension enabled (`CREATE EXTENSION vector;`).
    - Note your instance connection name (e.g., `project-id:region:instance-name`).
-   - Create a database (e.g., `maggies-nest`) and a user.
+   - Create a database (e.g., `bookmarks-db`) and a user.
 2. **Cloud Run**
    - Deploys the containerized FastAPI service.
    - Requires environment variables: `PROJECT_ID`, `REGION`, `INSTANCE_NAME`, `DB_USER`, `DB_PASSWORD`, `DB_NAME`, and `GEMINI_API_KEY`.

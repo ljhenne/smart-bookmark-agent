@@ -10,7 +10,7 @@ interface DOMElements {
   savePageBtn: HTMLButtonElement | null;
   saveBtnSpinner: HTMLElement | null;
   saveErrorMessage: HTMLElement | null;
-  maggieSuccessNest: HTMLElement | null;
+  successContainer: HTMLElement | null;
   searchInput: HTMLInputElement | null;
   searchBtn: HTMLElement | null;
   searchResults: HTMLElement | null;
@@ -64,7 +64,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     savePageBtn: document.getElementById("save-page-btn") as HTMLButtonElement | null,
     saveBtnSpinner: document.getElementById("save-btn-spinner"),
     saveErrorMessage: document.getElementById("save-error-message"),
-    maggieSuccessNest: document.getElementById("maggie-success-nest"),
+    successContainer: document.getElementById("success-container"),
     searchInput: document.getElementById("search-input") as HTMLInputElement | null,
     searchBtn: document.getElementById("search-btn"),
     searchResults: document.getElementById("search-results"),
@@ -201,7 +201,7 @@ function setupSaveButton() {
       dom.saveBtnSpinner?.classList.add("hidden");
       if (btnText) btnText.textContent = "Saved!";
       dom.savePageBtn!.classList.add("saved");
-      dom.maggieSuccessNest?.classList.remove("hidden");
+      dom.successContainer?.classList.remove("hidden");
     } catch (err) {
       const errMsg = err instanceof Error ? err.message : String(err);
       showSaveError(errMsg);
