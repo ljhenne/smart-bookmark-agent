@@ -23,14 +23,12 @@ async def extract_page_attributes(api_key: str, content: str) -> PageAttributes:
     )
 
     # Prefer plain text over raw HTML; cap at 8000 chars to stay within token limits
-    content_capped = content[:8000]
-
     prompt = (
         "You are an expert webpage metadata extractor.\n"
         "Analyze the webpage content below and extract the page attributes "
         "(summary, tags, category, and type). Use the finish tool to return the "
         "extracted attributes when you are done.\n"
-        f"Webpage content:\n{content_capped}"
+        f"Webpage content:\n{content}"
     )
     try:
         async with Agent(config) as agent:
