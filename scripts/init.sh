@@ -116,7 +116,7 @@ fi
 
 # --- Part 1.5: Persist and Set Active Project ID ---
 if [ "$PROJECT_ID_SET" = true ]; then
-    gcloud config set project "$FINAL_PROJECT_ID" --quiet || handle_error "Failed to set active project to '$FINAL_PROJECT_ID'."
+    gcloud config set project "$FINAL_PROJECT_ID" --quiet 2>/dev/null || handle_error "Failed to set active project to '$FINAL_PROJECT_ID'."
     echo "$FINAL_PROJECT_ID" > "$PROJECT_FILE" || handle_error "Failed to save project ID to $PROJECT_FILE."
     echo "Using project ID: $FINAL_PROJECT_ID (saved to $PROJECT_FILE)"
 fi
