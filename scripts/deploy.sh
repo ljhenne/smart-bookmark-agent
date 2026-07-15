@@ -19,14 +19,28 @@ if [ -z "$DB_PASSWORD" ]; then
   exit 1
 fi
 
-echo "Deploying bookmark-service to Google Cloud Run..."
+# Retrieve PROJECT_ID
+PROJECT_FILE="$HOME/project_id.txt"
+if [ -f "$PROJECT_FILE" ]; then
+  PROJECT_ID=$(cat "$PROJECT_FILE" | tr -d '[:space:]')
+else
+  PROJECT_ID=$(gcloud config get-value project 2>/dev/null)
+fi
 
-gcloud run deploy bookmark-service \
-  --source "$(dirname "$0")" \
+if [ -z "$PROJECT_ID" ] || [ "$PROJECT_ID" = "(unset)" ]; then
+  echo "Error: Google Cloud Project ID is not set. Please run init.sh first or configure gcloud."
+  exit 1
+fi
+
+echo "Deploying smart-bookmarks-service to Google Cloud Run..."
+
+gcloud run deploy smart-bookmarks-service \
+  --source "$(dirname "$0")/../service" \
   --region us-west1 \
   --platform managed \
   --allow-unauthenticated \
-  --add-cloudsql-instances=ljhenne-joonix-sandbox:us-west1:bookmark-instance \
-  --set-env-vars="PROJECT_ID=ljhenne-joonix-sandbox,REGION=us-west1,INSTANCE_NAME=bookmark-instance,DB_USER=bookmark-user,DB_PASSWORD=$DB_PASSWORD,DB_NAME=bookmarks-db,GEMINI_API_KEY=$GEMINI_API_KEY"
+  --add-cloudsql-instances="$PROJECT_ID:us-west1:smart-bookmarks" \
+  --set-env-vars="PROJECT_ID=$PROJECT_ID,REGION=us-west1,INSTANCE_NAME=smart-bookmarks,DB_USER=smart-bookmarks-service,DB_PASSWORD=$DB_PASSWORD,DB_NAME=smart-bookmarks-db,GEMINI_API_KEY=$GEMINI_API_KEY"
 
 echo "Deployment complete!"
+
