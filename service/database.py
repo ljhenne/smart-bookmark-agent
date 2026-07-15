@@ -127,8 +127,6 @@ def search_bookmarks_in_db(query_embedding: list[float], limit: int = 5) -> list
         Exception: If any error occurs during the database connection or query
             execution.
     """
-    query = ""
-
     # REPLACE_03_SEARCH
 
     conn = get_db_connection()
