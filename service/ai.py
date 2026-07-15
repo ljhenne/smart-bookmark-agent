@@ -18,32 +18,12 @@ async def extract_page_attributes(api_key: str, content: str) -> PageAttributes:
         PageAttributes: A structured object containing the extracted page summary,
             tags, category, and type.
     """
-    config = LocalAgentConfig(
-        response_schema=PageAttributes, policies=[policy.allow_all()], api_key=api_key
-    )
+    page_attributes: PageAttributes | None = None
 
-    # Prefer plain text over raw HTML; cap at 8000 chars to stay within token limits
-    prompt = (
-        "You are an expert webpage metadata extractor.\n"
-        "Analyze the webpage content below and extract the page attributes "
-        "(summary, tags, category, and type). Use the finish tool to return the "
-        "extracted attributes when you are done.\n"
-        f"Webpage content:\n{content}"
-    )
-    try:
-        async with Agent(config) as agent:
-            response = await agent.chat(prompt)
-            raw_attributes = await response.structured_output()
+    # REPLACE_01_SUMMARIZE
 
-            if not raw_attributes:
-                raise ValueError(
-                    "Failed to generate structured page attributes from LLM response."
-                )
+    return page_attributes
 
-            return PageAttributes.model_validate(raw_attributes)
-    except Exception as e:
-        traceback.print_exc()
-        raise ValueError(f"Error extracting attributes: {str(e)}")
 
 
 def generate_embedding(api_key: str, text: str) -> list[float]:
@@ -57,20 +37,8 @@ def generate_embedding(api_key: str, text: str) -> list[float]:
     Returns:
         list[float]: A 768-dimensional float list representing the vector embedding.
     """
-    try:
-        genai_client = genai.Client(api_key=api_key)
-        embed_response = genai_client.models.embed_content(
-            model="gemini-embedding-2",
-            contents=text,
-            config=genai.types.EmbedContentConfig(output_dimensionality=768),
-        )
-        if not embed_response.embeddings or len(embed_response.embeddings) == 0:
-            raise ValueError("Embedding model returned an empty response.")
+    embedding: list[float] | None = list()
 
-        embedding = embed_response.embeddings[0].values
-        if not embedding:
-            raise ValueError("Embedding values are empty or missing in the response.")
-        return embedding
-    except Exception as e:
-        traceback.print_exc()
-        raise ValueError(f"Error generating embedding: {str(e)}")
+    # REPLACE_02_EMBED
+
+    return embedding
