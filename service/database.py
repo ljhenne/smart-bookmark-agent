@@ -127,22 +127,9 @@ def search_bookmarks_in_db(query_embedding: list[float], limit: int = 5) -> list
         Exception: If any error occurs during the database connection or query
             execution.
     """
-    query = """
-        SELECT
-            id,
-            created_at,
-            last_processed_at,
-            title,
-            url,
-            summary,
-            category,
-            type,
-            tags,
-            (1 - (summary_embedding <=> %s::vector)) as similarity
-        FROM bookmark
-        ORDER BY summary_embedding <=> %s::vector
-        LIMIT %s;
-    """
+    query = ""
+
+    # REPLACE_03_SEARCH
 
     conn = get_db_connection()
     try:
