@@ -35,18 +35,14 @@ DB_USER="smart-bookmarks-service"
 echo "Using GCP Project: $PROJECT_ID"
 echo "Using Region:      $REGION"
 
-# 1. Create a Cloud SQL instance (if it doesn't exist)
-echo "Checking if Cloud SQL instance '$INSTANCE_NAME' exists..."
-if gcloud sql instances describe "$INSTANCE_NAME" --project="$PROJECT_ID" >/dev/null 2>&1; then
-  echo "Cloud SQL instance '$INSTANCE_NAME' already exists."
-else
-  echo "Creating Cloud SQL instance '$INSTANCE_NAME'..."
-  gcloud sql instances create "$INSTANCE_NAME" \
-    --database-version=POSTGRES_15 \
-    --tier=db-f1-micro \
-    --region="$REGION" \
-    --project="$PROJECT_ID"
+# 1. Verify Cloud SQL instance exists
+echo "Verifying Cloud SQL instance '$INSTANCE_NAME' exists..."
+if ! gcloud sql instances describe "$INSTANCE_NAME" --project="$PROJECT_ID" >/dev/null 2>&1; then
+  echo "Error: Cloud SQL instance '$INSTANCE_NAME' does not exist."
+  echo "Please run scripts/create-db-instance.sh first to initialize the database instance."
+  exit 1
 fi
+echo "Cloud SQL instance '$INSTANCE_NAME' verified."
 
 # 2. Create the database (if it doesn't exist)
 echo "Checking if database '$DB_NAME' exists..."
