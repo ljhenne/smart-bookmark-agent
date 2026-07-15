@@ -3,12 +3,15 @@
 # Exit on any error
 set -e
 
-# Verify DB_PASSWORD is configured
+# Verify DB_PASSWORD is configured, prompt if missing
 if [ -z "$DB_PASSWORD" ]; then
-  echo "Error: DB_PASSWORD environment variable is not set."
-  echo "Please export DB_PASSWORD before running this script, or run it like:"
-  echo "  DB_PASSWORD=your_db_password_here ./setup-db.sh"
-  exit 1
+  read -s -p "Enter Database Password (DB_PASSWORD): " DB_PASSWORD
+  echo
+  if [ -z "$DB_PASSWORD" ]; then
+    echo "Error: DB_PASSWORD is required."
+    exit 1
+  fi
+  export DB_PASSWORD
 fi
 
 # Retrieve PROJECT_ID
