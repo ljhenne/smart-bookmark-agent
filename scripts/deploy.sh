@@ -3,17 +3,6 @@
 # Exit on any error
 set -e
 
-# Verify GEMINI_API_KEY is configured, prompt if missing
-if [ -z "$GEMINI_API_KEY" ]; then
-  read -s -p "Enter Gemini API Key (GEMINI_API_KEY): " GEMINI_API_KEY
-  echo
-  if [ -z "$GEMINI_API_KEY" ]; then
-    echo "Error: GEMINI_API_KEY is required."
-    exit 1
-  fi
-  export GEMINI_API_KEY
-fi
-
 # Verify DB_PASSWORD is configured, prompt if missing
 if [ -z "$DB_PASSWORD" ]; then
   read -s -p "Enter Database Password (DB_PASSWORD): " DB_PASSWORD
@@ -46,7 +35,7 @@ gcloud run deploy smart-bookmarks-service \
   --platform managed \
   --allow-unauthenticated \
   --add-cloudsql-instances="$PROJECT_ID:us-west1:smart-bookmarks" \
-  --set-env-vars="PROJECT_ID=$PROJECT_ID,REGION=us-west1,INSTANCE_NAME=smart-bookmarks,DB_USER=smart-bookmarks-service,DB_PASSWORD=$DB_PASSWORD,DB_NAME=smart-bookmarks-db,GEMINI_API_KEY=$GEMINI_API_KEY"
+  --set-env-vars="PROJECT_ID=$PROJECT_ID,REGION=us-west1,INSTANCE_NAME=smart-bookmarks,DB_USER=smart-bookmarks-service,DB_PASSWORD=$DB_PASSWORD,DB_NAME=smart-bookmarks-db"
 
 echo "Deployment complete!"
 

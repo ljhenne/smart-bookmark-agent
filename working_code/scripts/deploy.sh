@@ -3,14 +3,6 @@
 # Exit on any error
 set -e
 
-# Verify GEMINI_API_KEY is configured
-if [ -z "$GEMINI_API_KEY" ]; then
-  echo "Error: GEMINI_API_KEY environment variable is not set."
-  echo "Please export GEMINI_API_KEY before running this script, or run it like:"
-  echo "  GEMINI_API_KEY=your_api_key_here ./deploy.sh"
-  exit 1
-fi
-
 # Verify DB_PASSWORD is configured
 if [ -z "$DB_PASSWORD" ]; then
   echo "Error: DB_PASSWORD environment variable is not set."
@@ -27,6 +19,6 @@ gcloud run deploy bookmark-service \
   --platform managed \
   --allow-unauthenticated \
   --add-cloudsql-instances=ljhenne-joonix-sandbox:us-west1:bookmark-instance \
-  --set-env-vars="PROJECT_ID=ljhenne-joonix-sandbox,REGION=us-west1,INSTANCE_NAME=bookmark-instance,DB_USER=bookmark-user,DB_PASSWORD=$DB_PASSWORD,DB_NAME=bookmarks-db,GEMINI_API_KEY=$GEMINI_API_KEY"
+  --set-env-vars="PROJECT_ID=ljhenne-joonix-sandbox,REGION=us-west1,INSTANCE_NAME=bookmark-instance,DB_USER=bookmark-user,DB_PASSWORD=$DB_PASSWORD,DB_NAME=bookmarks-db"
 
 echo "Deployment complete!"

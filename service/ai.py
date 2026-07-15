@@ -6,7 +6,7 @@ from google.antigravity.hooks import policy
 from models import PageAttributes
 
 
-async def extract_page_attributes(api_key: str, content: str) -> PageAttributes:
+async def extract_page_attributes(content: str) -> PageAttributes:
     """
     Uses the Antigravity Agent to analyze webpage content and extract
     structured metadata (summary, tags, category, and type).
@@ -26,7 +26,7 @@ async def extract_page_attributes(api_key: str, content: str) -> PageAttributes:
 
 
 
-def generate_embedding(api_key: str, text: str) -> list[float]:
+def generate_embedding(text: str) -> list[float]:
     """
     Generates a 768-dimensional vector embedding for the given text
     using the Gemini Embedding API.

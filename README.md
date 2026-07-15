@@ -19,12 +19,12 @@ To deploy this project to Google Cloud, you will need the following resources en
    - Create a database (e.g., `bookmarks-db`) and a user.
 2. **Cloud Run**
    - Deploys the containerized FastAPI service.
-   - Requires environment variables: `PROJECT_ID`, `REGION`, `INSTANCE_NAME`, `DB_USER`, `DB_PASSWORD`, `DB_NAME`, and `GEMINI_API_KEY`.
+   - Requires environment variables: `PROJECT_ID`, `REGION`, `INSTANCE_NAME`, `DB_USER`, `DB_PASSWORD`, and `DB_NAME`.
 3. **IAM Permissions**
    - The default compute service account must have the **Cloud SQL Client** role to connect to the database via the Cloud SQL Auth Proxy.
 4. **Enabled APIs**
    - Cloud SQL Admin API
-   - Generative Language API (for Gemini LLM access)
+   - Vertex AI API
 
 ## 🚀 Local Development Setup
 
@@ -38,9 +38,8 @@ source .venv/bin/activate
 pip install -r requirements.txt
 ```
 
-Set your local environment variables (ensure `GEMINI_API_KEY` is set):
+Set your local environment variables (ensure you have run `gcloud auth application-default login` and `PROJECT_ID` is set):
 ```bash
-export GEMINI_API_KEY="your-gemini-api-key"
 export PROJECT_ID="your-project-id"
 export REGION="your-region"
 export INSTANCE_NAME="your-db-instance"

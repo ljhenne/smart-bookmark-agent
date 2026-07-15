@@ -1,3 +1,4 @@
+import os
 import traceback
 
 from google import genai
@@ -6,7 +7,7 @@ from google.antigravity.hooks import policy
 from models import PageAttributes
 
 
-async def extract_page_attributes(api_key: str, content: str) -> PageAttributes:
+async def extract_page_attributes(content: str) -> PageAttributes:
     """
     Uses the Antigravity Agent to analyze webpage content and extract
     structured metadata (summary, tags, category, and type).
@@ -18,8 +19,18 @@ async def extract_page_attributes(api_key: str, content: str) -> PageAttributes:
         PageAttributes: A structured object containing the extracted page summary,
             tags, category, and type.
     """
+    project_id = os.getenv("PROJECT_ID")
+    region = os.getenv("REGION", "us-central1")
+
+    if not project_id:
+        raise ValueError("PROJECT_ID environment variable must be set for Vertex AI.")
+
     config = LocalAgentConfig(
-        response_schema=PageAttributes, policies=[policy.allow_all()], api_key=api_key
+        response_schema=PageAttributes,
+        policies=[policy.allow_all()],
+        vertex=True,
+        project=project_id,
+        location=region
     )
 
     # Prefer plain text over raw HTML; cap at 8000 chars to stay within token limits
@@ -48,7 +59,7 @@ async def extract_page_attributes(api_key: str, content: str) -> PageAttributes:
         raise ValueError(f"Error extracting attributes: {str(e)}")
 
 
-def generate_embedding(api_key: str, text: str) -> list[float]:
+def generate_embedding(text: str) -> list[float]:
     """
     Generates a 768-dimensional vector embedding for the given text
     using the Gemini Embedding API.
@@ -59,10 +70,22 @@ def generate_embedding(api_key: str, text: str) -> list[float]:
     Returns:
         list[float]: A 768-dimensional float list representing the vector embedding.
     """
+    project_id = os.getenv("PROJECT_ID")
+    region = os.getenv("REGION", "us-central1")
+
+    if not project_id:
+        raise ValueError("PROJECT_ID environment variable must be set for Vertex AI.")
+
     try:
-        genai_client = genai.Client(api_key=api_key)
+        genai_client = genai.Client(
+            vertexai=True,
+            project=project_id,
+            location=region
+        )
+        model_name = "text-embedding-004"
+
         embed_response = genai_client.models.embed_content(
-            model="gemini-embedding-2",
+            model=model_name,
             contents=text,
             config=genai.types.EmbedContentConfig(output_dimensionality=768),
         )

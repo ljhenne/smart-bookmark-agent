@@ -29,9 +29,9 @@ async def lifespan(_: FastAPI):
     Args:
         _: The FastAPI application instance. Not used.
     """
-    api_key = os.getenv("GEMINI_API_KEY")
-    if not api_key:
-        raise ValueError("GEMINI_API_KEY environment variable not set")
+    project_id = os.getenv("PROJECT_ID")
+    if not project_id:
+        raise ValueError("PROJECT_ID environment variable must be set for Vertex AI")
     print("[smart-bookmarks] Service started. Listening on http://localhost:8080")
     yield
 
@@ -72,8 +72,7 @@ async def process_page_content(payload: PageContent):
     print("[smart-bookmarks] Calling LLM to extract page attributes...")
     try:
         safe_to_embed = clean_html(payload.html)[:8000]
-        api_key = os.environ["GEMINI_API_KEY"]
-        attributes = await extract_page_attributes(api_key, safe_to_embed)
+        attributes = await extract_page_attributes(safe_to_embed)
         print(f"[smart-bookmarks] Parsed PageAttributes: {attributes!r}")
     except Exception as e:
         raise HTTPException(
@@ -82,7 +81,7 @@ async def process_page_content(payload: PageContent):
 
     print("[smart-bookmarks] Generating embedding for summary...")
     try:
-        embedding = generate_embedding(api_key, attributes.summary)
+        embedding = generate_embedding(attributes.summary)
         print(f"[smart-bookmarks] Embedding generated — vector length={len(embedding)}")
     except Exception as e:
         raise HTTPException(
@@ -139,8 +138,7 @@ async def search_bookmarks(q: str, limit: int = 5):
 
     print("[smart-bookmarks] Generating embedding for query...")
     try:
-        api_key = os.environ["GEMINI_API_KEY"]
-        query_embedding = generate_embedding(api_key, q)
+        query_embedding = generate_embedding(q)
         print(
             "[smart-bookmarks] Query embedding generated — "
             f"vector length={len(query_embedding)}"
