@@ -104,7 +104,22 @@ sleep 5
 
 # 5. Run scripts/schema.sql to enable the vector extension and create the bookmark table
 echo "Initializing database schema via schema.sql..."
-python3 -c "
+
+# Locate python bin (prefer virtualenv python if it exists)
+PYTHON_BIN="python3"
+if [ -f "$SCRIPT_DIR/../service/.venv/bin/python" ]; then
+  PYTHON_BIN="$SCRIPT_DIR/../service/.venv/bin/python"
+elif [ -f "$SCRIPT_DIR/../service/.venv/bin/python3" ]; then
+  PYTHON_BIN="$SCRIPT_DIR/../service/.venv/bin/python3"
+fi
+
+# Ensure pg8000 is installed
+if ! "$PYTHON_BIN" -c "import pg8000" &>/dev/null; then
+  echo "Installing pg8000 Python module..."
+  "$PYTHON_BIN" -m pip install pg8000 || "$PYTHON_BIN" -m pip install --user pg8000
+fi
+
+"$PYTHON_BIN" -c "
 import os
 import pg8000
 
@@ -140,3 +155,4 @@ except Exception as e:
 "
 
 echo "Setup complete!"
+
