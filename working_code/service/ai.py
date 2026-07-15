@@ -19,6 +19,8 @@ async def extract_page_attributes(content: str) -> PageAttributes:
         PageAttributes: A structured object containing the extracted page summary,
             tags, category, and type.
     """
+    page_attributes: PageAttributes | None = None
+
     project_id = os.getenv("PROJECT_ID")
     region = os.getenv("REGION", "us-central1")
 
@@ -33,15 +35,12 @@ async def extract_page_attributes(content: str) -> PageAttributes:
         location=region
     )
 
-    # Prefer plain text over raw HTML; cap at 8000 chars to stay within token limits
-    content_capped = content[:8000]
-
     prompt = (
         "You are an expert webpage metadata extractor.\n"
         "Analyze the webpage content below and extract the page attributes "
         "(summary, tags, category, and type). Use the finish tool to return the "
         "extracted attributes when you are done.\n"
-        f"Webpage content:\n{content_capped}"
+        f"Webpage content:\n{content}"
     )
     try:
         async with Agent(config) as agent:
@@ -53,10 +52,12 @@ async def extract_page_attributes(content: str) -> PageAttributes:
                     "Failed to generate structured page attributes from LLM response."
                 )
 
-            return PageAttributes.model_validate(raw_attributes)
+            page_attributes = PageAttributes.model_validate(raw_attributes)
     except Exception as e:
         traceback.print_exc()
         raise ValueError(f"Error extracting attributes: {str(e)}")
+
+    return page_attributes
 
 
 def generate_embedding(text: str) -> list[float]:
@@ -70,6 +71,8 @@ def generate_embedding(text: str) -> list[float]:
     Returns:
         list[float]: A 768-dimensional float list representing the vector embedding.
     """
+    embedding: list[float] | None = list()
+
     project_id = os.getenv("PROJECT_ID")
     region = os.getenv("REGION", "us-central1")
 
@@ -95,7 +98,8 @@ def generate_embedding(text: str) -> list[float]:
         embedding = embed_response.embeddings[0].values
         if not embedding:
             raise ValueError("Embedding values are empty or missing in the response.")
-        return embedding
     except Exception as e:
         traceback.print_exc()
         raise ValueError(f"Error generating embedding: {str(e)}")
+
+    return embedding
