@@ -461,13 +461,6 @@ body {
   margin-top: 18px;
 }
 
-.success-image {
-  width: 54px;
-  height: 54px;
-  object-fit: contain;
-  filter: drop-shadow(0 4px 8px rgba(0,0,0,0.2));
-}
-
 .success-message {
   background: rgba(163, 210, 166, 0.1);
   border: 1px solid var(--color-seafoam);
@@ -475,7 +468,6 @@ body {
   padding: 4px 10px;
   border-radius: 12px;
   font-size: 11px;
-  margin-top: 6px;
   font-weight: 500;
   box-shadow: 0 2px 6px rgba(0,0,0,0.15);
 }
