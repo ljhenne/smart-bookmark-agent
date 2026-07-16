@@ -22,5 +22,5 @@ node_modules/
 .idea/
 
 # Generated files
-*/extension/dist/*
+dist/
 */extension/config.json
