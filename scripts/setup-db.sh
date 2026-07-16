@@ -5,6 +5,8 @@ set -e
 
 # Suppress noisy regional access boundary warnings and other non-critical warnings
 export CLOUDSDK_CORE_VERBOSITY=error
+export GOOGLE_AUTH_TRUST_BOUNDARY_ENABLED=false
+
 
 # Verify DB_PASSWORD is configured, prompt if missing
 if [ -z "$DB_PASSWORD" ]; then

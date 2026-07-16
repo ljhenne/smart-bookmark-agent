@@ -5,6 +5,8 @@ set -e
 
 # Suppress noisy regional access boundary warnings and other non-critical warnings
 export CLOUDSDK_CORE_VERBOSITY=error
+export GOOGLE_AUTH_TRUST_BOUNDARY_ENABLED=false
+
 
 # Retrieve PROJECT_ID
 PROJECT_FILE="$HOME/project_id.txt"
