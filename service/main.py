@@ -1,3 +1,4 @@
+import logging
 import os
 from contextlib import asynccontextmanager
 from datetime import datetime, timezone
@@ -9,6 +10,8 @@ from helpers import clean_html, generate_id_from_url, parse_timestamp
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from models import Bookmark, PageContent, SearchResultBookmark
+
+logger = logging.getLogger("uvicorn.error")
 
 app = FastAPI(title="Smart Bookmarks Processor Service")
 
@@ -63,6 +66,7 @@ async def process_page_content(payload: PageContent):
     try:
         created_at = parse_timestamp(payload.timestamp)
     except ValueError as e:
+        logger.warning(f"Invalid timestamp format in payload: {e}")
         raise HTTPException(
             status_code=400, detail=f"Invalid timestamp format in payload: {e}"
         )
@@ -75,6 +79,7 @@ async def process_page_content(payload: PageContent):
         attributes = await extract_page_attributes(safe_to_embed)
         print(f"[smart-bookmarks] Parsed PageAttributes: {attributes!r}")
     except Exception as e:
+        logger.exception("Error extracting page attributes")
         raise HTTPException(
             status_code=500, detail=f"Error extracting page attributes: {str(e)}"
         )
@@ -84,6 +89,7 @@ async def process_page_content(payload: PageContent):
         embedding = generate_embedding(attributes.summary)
         print(f"[smart-bookmarks] Embedding generated — vector length={len(embedding)}")
     except Exception as e:
+        logger.exception("Error generating embedding")
         raise HTTPException(
             status_code=500, detail=f"Error generating embedding: {str(e)}"
         )
@@ -111,6 +117,7 @@ async def process_page_content(payload: PageContent):
         await to_thread.run_sync(store_bookmark_in_db, bookmark)
         print("[smart-bookmarks] Bookmark stored successfully in database.")
     except Exception as e:
+        logger.exception("Database error while storing bookmark")
         raise HTTPException(status_code=500, detail=f"Database error: {str(e)}")
 
     return bookmark
@@ -144,6 +151,7 @@ async def search_bookmarks(q: str, limit: int = 5):
             f"vector length={len(query_embedding)}"
         )
     except Exception as e:
+        logger.exception("Error generating query embedding")
         raise HTTPException(
             status_code=500, detail=f"Error generating query embedding: {str(e)}"
         )
@@ -155,6 +163,7 @@ async def search_bookmarks(q: str, limit: int = 5):
         )
         print(f"[smart-bookmarks] Found {len(results)} matching bookmarks.")
     except Exception as e:
+        logger.exception("Database search error")
         raise HTTPException(status_code=500, detail=f"Database search error: {str(e)}")
 
     print("[smart-bookmarks] Formatting and returning search results.")
