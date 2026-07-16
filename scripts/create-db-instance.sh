@@ -3,6 +3,9 @@
 # Exit on any error
 set -e
 
+# Suppress noisy regional access boundary warnings and other non-critical warnings
+export CLOUDSDK_CORE_VERBOSITY=error
+
 # Retrieve PROJECT_ID
 PROJECT_FILE="$HOME/project_id.txt"
 if [ -f "$PROJECT_FILE" ]; then

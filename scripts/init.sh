@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# Suppress noisy regional access boundary warnings and other non-critical warnings
+export CLOUDSDK_CORE_VERBOSITY=error
+
 # --- Function for error handling ---
 handle_error() {
   echo -e "\n\n*******************************************************"

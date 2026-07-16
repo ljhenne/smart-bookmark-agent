@@ -3,6 +3,9 @@
 # Exit on any error
 set -e
 
+# Suppress noisy regional access boundary warnings and other non-critical warnings
+export CLOUDSDK_CORE_VERBOSITY=error
+
 # Verify DB_PASSWORD is configured, prompt if missing
 if [ -z "$DB_PASSWORD" ]; then
   read -s -p "Enter Database Password (DB_PASSWORD): " DB_PASSWORD
