@@ -21,7 +21,7 @@ if [ -z "$PROJECT_ID" ] || [ "$PROJECT_ID" = "(unset)" ]; then
   exit 1
 fi
 
-REGION="us-west1"
+
 INSTANCE_NAME="smart-bookmarks"
 
 echo "Using GCP Project: $PROJECT_ID"
