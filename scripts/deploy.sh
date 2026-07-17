@@ -36,11 +36,10 @@ echo "Deploying smart-bookmarks-service to Google Cloud Run..."
 
 gcloud run deploy smart-bookmarks-service \
   --source "$(dirname "$0")/../service" \
-  --region us-west1 \
   --platform managed \
   --allow-unauthenticated \
   --add-cloudsql-instances="$PROJECT_ID:us-west1:smart-bookmarks" \
-  --set-env-vars="PROJECT_ID=$PROJECT_ID,REGION=us-west1,INSTANCE_NAME=smart-bookmarks,DB_USER=smart-bookmarks-service,DB_PASSWORD=$DB_PASSWORD,DB_NAME=smart-bookmarks-db"
+  --set-env-vars="PROJECT_ID=$PROJECT_ID,INSTANCE_NAME=smart-bookmarks,DB_USER=smart-bookmarks-service,DB_PASSWORD=$DB_PASSWORD,DB_NAME=smart-bookmarks-db"
 
 echo "Deployment complete!"
 
