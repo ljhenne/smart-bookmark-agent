@@ -32,7 +32,6 @@ if [ -z "$PROJECT_ID" ] || [ "$PROJECT_ID" = "(unset)" ]; then
   exit 1
 fi
 
-REGION="us-west1"
 INSTANCE_NAME="smart-bookmarks"
 DB_NAME="smart-bookmarks-db"
 DB_USER="smart-bookmarks-service"
