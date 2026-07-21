@@ -22,18 +22,20 @@ async def extract_page_attributes(content: str) -> PageAttributes:
     page_attributes: PageAttributes | None = None
 
     project_id = os.getenv("PROJECT_ID")
-    region = os.getenv("REGION", "us-central1")
+    region = os.getenv("REGION")
 
     if not project_id:
         raise ValueError("PROJECT_ID environment variable must be set for Vertex AI.")
+
+    if not region:
+        raise ValueError("REGION environment variable must be set for Vertex AI.")
 
     config = LocalAgentConfig(
         response_schema=PageAttributes,
         policies=[policy.allow_all()],
         vertex=True,
         project=project_id,
-        location=region,
-        model="gemini-2.5-flash"
+        location=region
     )
 
     prompt = (
@@ -52,7 +54,6 @@ async def extract_page_attributes(content: str) -> PageAttributes:
                 raise ValueError(
                     "Failed to generate structured page attributes from LLM response."
                 )
-
             page_attributes = PageAttributes.model_validate(raw_attributes)
     except Exception as e:
         traceback.print_exc()
@@ -75,10 +76,13 @@ def generate_embedding(text: str) -> list[float]:
     embedding: list[float] | None = list()
 
     project_id = os.getenv("PROJECT_ID")
-    region = os.getenv("REGION", "us-central1")
+    region = os.getenv("REGION")
 
     if not project_id:
         raise ValueError("PROJECT_ID environment variable must be set for Vertex AI.")
+
+    if not region:
+        raise ValueError("REGION environment variable must be set for Vertex AI.")
 
     try:
         genai_client = genai.Client(
