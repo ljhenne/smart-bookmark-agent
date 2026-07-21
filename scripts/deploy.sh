@@ -33,12 +33,15 @@ if [ -z "$PROJECT_ID" ] || [ "$PROJECT_ID" = "(unset)" ]; then
 fi
 
 echo "Deploying smart-bookmarks-service to Google Cloud Run..."
+echo "Using GCP Project: $PROJECT_ID"
+echo "Using Region:      $REGION"
 
 gcloud run deploy smart-bookmarks-service \
   --source "$(dirname "$0")/../service" \
+  --region "$REGION"
   --platform managed \
   --allow-unauthenticated \
-  --add-cloudsql-instances="$PROJECT_ID:us-west1:smart-bookmarks" \
+  --add-cloudsql-instances="$PROJECT_ID:$REGION:smart-bookmarks" \
   --set-env-vars="PROJECT_ID=$PROJECT_ID,INSTANCE_NAME=smart-bookmarks,DB_USER=smart-bookmarks-service,DB_PASSWORD=$DB_PASSWORD,DB_NAME=smart-bookmarks-db"
 
 echo "Deployment complete!"
