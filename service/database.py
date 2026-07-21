@@ -104,45 +104,5 @@ def store_bookmark_in_db(bookmark: Bookmark):
         conn.close()
 
 
-def search_bookmarks_in_db(query_embedding: list[float], limit: int = 5) -> list[dict]:
-    """
-    Queries the database for bookmarks with summaries semantically similar to the query
-        vector.
+# REPLACE_03_SEARCH
 
-    Utilizes pgvector's cosine distance operator (<=>).
-
-    Args:
-        query_embedding (list[float]):
-            The 768-dimensional vector embedding of the search query.
-        limit (int, optional):
-            The maximum number of search results to return. Defaults to 5.
-
-    Returns:
-        list[dict]: A list of dictionaries representing the matching bookmarks, each
-            containing the fields (id, created_at, last_processed_at, title, url,
-            summary, category, type, tags) and their similarity score.
-
-    Raises:
-        KeyError: If any of the required database environment variables are missing.
-        Exception: If any error occurs during the database connection or query
-            execution.
-    """
-    # REPLACE_03_SEARCH
-
-    conn = get_db_connection()
-    try:
-        cur = conn.cursor()
-        try:
-            cur.execute(
-                query,
-                [str(query_embedding), str(query_embedding), limit],
-            )
-            columns = [col[0] for col in cur.description]
-            results = []
-            for row in cur.fetchall():
-                results.append(dict(zip(columns, row)))
-            return results
-        finally:
-            cur.close()
-    finally:
-        conn.close()
