@@ -38,7 +38,7 @@ echo "Using Region:      $REGION"
 
 gcloud run deploy smart-bookmarks-service \
   --source "$(dirname "$0")/../service" \
-  --region "$REGION"
+  --region "$REGION" \
   --platform managed \
   --allow-unauthenticated \
   --add-cloudsql-instances="$PROJECT_ID:$REGION:smart-bookmarks" \
