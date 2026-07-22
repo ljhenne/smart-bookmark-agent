@@ -35,6 +35,7 @@ async def extract_page_attributes(content: str) -> PageAttributes:
         policies=[policy.allow_all()],
         vertex=True,
         project=project_id,
+        model="gemini-2.5-flash",
         location=region
     )
 

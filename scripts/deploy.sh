@@ -42,7 +42,7 @@ gcloud run deploy smart-bookmarks-service \
   --platform managed \
   --allow-unauthenticated \
   --add-cloudsql-instances="$PROJECT_ID:$REGION:smart-bookmarks" \
-  --set-env-vars="PROJECT_ID=$PROJECT_ID,INSTANCE_NAME=smart-bookmarks,DB_USER=smart-bookmarks-service,DB_PASSWORD=$DB_PASSWORD,DB_NAME=smart-bookmarks-db"
+  --set-env-vars="PROJECT_ID=$PROJECT_ID,REGION=$REGION,INSTANCE_NAME=smart-bookmarks,DB_USER=smart-bookmarks-service,DB_PASSWORD=$DB_PASSWORD,DB_NAME=smart-bookmarks-db"
 
 echo "Deployment complete!"
 
