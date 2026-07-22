@@ -10,7 +10,7 @@ export GOOGLE_AUTH_TRUST_BOUNDARY_ENABLED=false
 
 # Verify DB_PASSWORD is configured, prompt if missing
 if [ -z "$DB_PASSWORD" ]; then
-  read -s -p "Enter Database Password (DB_PASSWORD): " DB_PASSWORD
+  read -s -p "Please create a database password (DB_PASSWORD): " DB_PASSWORD
   echo
   if [ -z "$DB_PASSWORD" ]; then
     echo "Error: DB_PASSWORD is required."
